@@ -278,7 +278,7 @@ export default function Form() {
       setError(true);
       setHelperText("required");
     }
-    const localValues = JSON.parse(localStorage.getItem("Values"));
+    const localValues = JSON.parse(localStorage.getItem("Values"))||{temp:[]};
     console.log({ localValues });
     const temp = { ...val };
     console.log({ temp });
@@ -294,7 +294,7 @@ export default function Form() {
     setHobby([""]);
     window.location.reload(false);
   };
-  const tableValues = JSON.parse(localStorage.getItem("Values")).temp;
+  const tableValues = JSON.parse(localStorage.getItem("Values"))?.temp||[];
   console.log({ tableValues });
   return (
     <div>
@@ -491,7 +491,7 @@ export default function Form() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {tableValues.map((person) => {
+                  {tableValues?.map((person) => {
                     console.log({ person }, "hello");
                     return (
                       <TableRow>
