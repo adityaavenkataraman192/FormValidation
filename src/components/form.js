@@ -18,6 +18,11 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import logo from "./logo.jpeg";
+import { render } from "react-dom";
+import AceEditor from "react-ace";
+import "ace-builds/src-noconflict/mode-json";
+import "ace-builds/src-noconflict/theme-github";
+import "ace-builds/src-noconflict/ext-language_tools";
 
 const data = {
   form: {
@@ -74,6 +79,7 @@ const data = {
             html_element: "TextArea",
             variant: "outlined",
           },
+          
           {
             name: "country",
             label: "Country",
@@ -183,6 +189,7 @@ export default function Form() {
   const [ageHelperText, setAgeHelperText] = React.useState("");
   const [phoneHelperText, setPhoneHelperText] = React.useState("");
   const [show, setShow] = React.useState(true);
+  const [jsonConfig,setjsonConfig]=React.useState(data);
 
   const onHandleChange = (e) => {
     console.log("e.target.value", e.target.value); //to check the type of the data
@@ -278,7 +285,9 @@ export default function Form() {
       setError(true);
       setHelperText("required");
     }
-    const localValues = JSON.parse(localStorage.getItem("Values"))||{temp:[]};
+    const localValues = JSON.parse(localStorage.getItem("Values")) || {
+      temp: [],
+    };
     console.log({ localValues });
     const temp = { ...val };
     console.log({ temp });
@@ -294,10 +303,19 @@ export default function Form() {
     setHobby([""]);
     window.location.reload(false);
   };
-  const tableValues = JSON.parse(localStorage.getItem("Values"))?.temp||[];
+  const onChange=(newValue)=> {
+
+    // console.log("change", newValue);
+
+    setjsonConfig(newValue);
+  }
+  
+  const tableValues = JSON.parse(localStorage.getItem("Values"))?.temp || [];
   console.log({ tableValues });
   return (
-    <div>
+    
+    <div className="section">
+      <Grid item xs={6} sm={6}>
       <form className="form-outer-wrapper" onSubmit={submitForm} error>
         {data.form.sections.map((item) => {
           return (
@@ -306,97 +324,96 @@ export default function Form() {
                 <img src={logo} alt="face1" />
                 <h2>{item.section_title}</h2>
               </Grid>
-              {item.fields.map((data) => {
-                console.log("data", data);
+              {item.fields.map((jsonConfig) => {
+                console.log("data", jsonConfig);
                 return (
                   <Grid item xs={12} sm={12}>
-                    {data.data_type === "String" ? (
+                    {jsonConfig.data_type === "String" ? (
                       <TextField
                         fullWidth={true}
                         error={error}
-                        variant={data.variant}
-                        label={data.label}
-                        name={data.name}
-                        type={data.data_type === "String"}
+                        variant={jsonConfig.variant}
+                        label={jsonConfig.label}
+                        name={jsonConfig.name}
+                        type={jsonConfig.data_type === "String"}
                         onChange={onHandleChange}
                         helperText={helperText}
                       />
-                    ) : data.data_type === "email" ? (
+                    ) : jsonConfig.data_type === "email" ? (
                       <TextField
                         fullWidth={true}
                         error={error}
-                        variant={data.variant}
-                        label={data.label}
-                        name={data.name}
-                        type={data.data_type}
+                        variant={jsonConfig.variant}
+                        label={jsonConfig.label}
+                        name={jsonConfig.name}
+                        type={jsonConfig.data_type}
                         onChange={onHandleChange}
                         helperText={emailHelperText}
                       />
-                    ) : data.label === "Phone" ? (
+                    ) : jsonConfig.label === "Phone" ? (
                       <TextField
                         fullWidth={true}
                         error={error}
-                        variant={data.variant}
-                        label={data.label}
-                        name={data.name}
+                        variant={jsonConfig.variant}
+                        label={jsonConfig.label}
+                        name={jsonConfig.name}
                         type={
-                          data.data_type === "Integer" ? "number" : "String"
+                          jsonConfig.data_type === "Integer" ? "number" : "String"
                         }
                         onChange={onHandleChange}
                         helperText={phoneHelperText}
                       />
-                    ) : data.name === "age" ? (
+                    ) : jsonConfig.name === "age" ? (
                       <TextField
                         fullWidth={true}
                         error={error}
-                        variant={data.variant}
-                        label={data.label}
-                        name={data.name}
+                        variant={jsonConfig.variant}
+                        label={jsonConfig.label}
+                        name={jsonConfig.name}
                         type={
-                          data.data_type === "Integer" ? "number" : "String"
+                          jsonConfig.data_type === "Integer" ? "number" : "String"
                         }
                         onChange={onHandleChange}
                         helperText={ageHelperText}
                       />
-                    ) : data.html_element === "TextArea" ? (
+                    ) : jsonConfig.html_element === "TextArea" ? (
                       <div>
                         <TextareaAutosize
-                        className="textArea"
-                          
-                          name={data.name}
-                          label={data.label}
-                          variant={data.variant}
-                          minRows={data.minRows}
-                          placeholder={data.placeholder}
+                          className="textArea"
+                          name={jsonConfig.name}
+                          label={jsonConfig.label}
+                          variant={jsonConfig.variant}
+                          minRows={jsonConfig.minRows}
+                          placeholder={jsonConfig.placeholder}
                           onChange={onHandleChange}
                         />
                         <div style={{ color: "red", fontSize: "12px" }}>
                           {helperTextAddress}
                         </div>
                       </div>
-                    ) : data.html_element === "Select" ? (
+                    ) : jsonConfig.html_element === "Select" ? (
                       <Autocomplete
                         id="combo-box-demo"
-                        options={data.options}
+                        options={jsonConfig.options}
                         getOptionLabel={(option) => option.label}
                         // style={{ width: 300 }}
                         onChange={onSelectCountry}
                         renderInput={(params) => (
                           <TextField
-                            name={data.name}
+                            name={jsonConfig.name}
                             helperText={helperText}
                             error={error}
                             {...params}
-                            label={data.label}
-                            variant={data.variant}
+                            label={jsonConfig.label}
+                            variant={jsonConfig.variant}
                           />
                         )}
                       />
-                    ) : data.html_element === "multiple" ? (
+                    ) : jsonConfig.html_element === "multiple" ? (
                       <Autocomplete
                         id="combo-box-demo"
                         multiple
-                        options={data.options}
+                        options={jsonConfig.options}
                         onChange={onSelectHobby}
                         getOptionLabel={(option) => option.label}
                         // style={{ width: 300 }}
@@ -417,7 +434,7 @@ export default function Form() {
                   </Grid>
                 );
               })}
-              {item.feilds2.map((data1) => {
+              {item.feilds2.map((jsonConfig) => {
                 return (
                   <Grid item xs={12} sm={8}>
                     {
@@ -425,11 +442,11 @@ export default function Form() {
                         {
                           <div>
                             <Grid item xs={12} sm={12}>
-                              <strong>{data1.section_title3}</strong>
+                              <strong>{jsonConfig.section_title3}</strong>
                             </Grid>
                             <Grid item xs={12} sm={12} className="flex">
-                              {data1.checkFeilds
-                                ? data1.checkFeilds.map((checkdata) => {
+                              {jsonConfig.checkFeilds
+                                ? jsonConfig.checkFeilds.map((checkdata) => {
                                     return (
                                       <Grid item xs={12} sm={12}>
                                         <label>{checkdata.label}</label>
@@ -510,10 +527,24 @@ export default function Form() {
           ) : (
             ""
           )}
+          
         </div>
 
         {/* <Button type='reset' variant='contained' color='primary'style={{padding:"0 auto",margin:"10px"}}>Reset</Button> */}
       </form>
+      
+      </Grid>
+      <section>
+      <AceEditor
+    mode="java"
+    theme="github"
+    onChange={onChange}
+    name="UNIQUE_ID_OF_DIV"
+    editorProps={{ $blockScrolling: true }}
+    value={JSON.stringify(jsonConfig,null,2)}
+  />
+      </section>
+      
     </div>
   );
 }
