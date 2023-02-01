@@ -536,7 +536,7 @@ export default function Form() {
       </Grid>
       <section>
       <AceEditor
-    mode="java"
+    mode="json"
     theme="github"
     onChange={onChange}
     name="UNIQUE_ID_OF_DIV"
