@@ -224,10 +224,10 @@ export default function Form() {
     } else if (e.target.name === "address") {
       if (e.target.value) {
         setAddressError(true);
-        setHelperTextAddress("required");
+        setHelperTextAddress("");
       } else {
         setAddressError(false);
-        setHelperTextAddress("");
+        setHelperTextAddress("Required");
       }
     }
   };
